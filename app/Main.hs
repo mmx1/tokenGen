@@ -15,19 +15,22 @@ main = readArg `catch` handler
 readArg :: IO()
 readArg = do
   (path:_) <- getArgs
-  readDir path
-
-
---readDir :: FilePath ->  IO LexHgram
-readDir p = do
-  --listDirectory unavailable, drop .. and .	
-  dirContents <-  filter (/= "..") <$> (filter(/= ".")) <$> (getDirectoryContents p )
-  putStrLn $ show $ dirContents
-  maps <- mapM mapFile dirContents
+  maps <-  readDir path
   putStrLn $ show maps
-  --dirContents <- listDirectory p 
-  --return mapM mapFile dirContents
---  return $ M.unionsWith (+) (mapM mapFile dirContents)
+  putStrLn $ show $ M.size maps
+
+
+readDir :: FilePath ->  IO LexHgram
+readDir p = do
+  dirContents <- dirPaths p
+  putStrLn $ show $ dirContents
+  maps <- (M.unionsWith (+) ) <$> (mapM mapFile dirContents)
+  putStrLn $ show maps
+  return maps
+
+dirPaths :: FilePath -> IO [FilePath]
+--listDirectory unavailable, drop .. and .	
+dirPaths p = (map (p ++ )) <$> filter (/= "..") <$> (filter(/= ".")) <$> (getDirectoryContents p )
 
 mapFile :: FilePath -> IO LexHgram
 mapFile p = do
