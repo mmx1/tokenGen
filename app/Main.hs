@@ -2,7 +2,7 @@ module Main where
 
 import Lexer
 import qualified Data.Text as T
-import qualified Data.Map as M
+import qualified Data.Map.Strict as M
 import qualified Data.Text.IO as TIO
 import System.Environment
 import System.Directory
@@ -15,7 +15,7 @@ main = readArg `catch` handler
 readArg :: IO()
 readArg = do
   (path:_) <- getArgs
-  maps <-  readDir path
+  maps <-  M.filter (> 1) <$> readDir path
   putStrLn $ show maps
   putStrLn $ show $ M.size maps
 
@@ -32,7 +32,10 @@ readDir p = (M.unionsWith (+) ) <$> (dirPaths p >>= (mapM recReadDir))
 
 dirPaths :: FilePath -> IO [FilePath]
 --listDirectory unavailable, drop .. and .  
-dirPaths p = (map (p ++ )) <$> filter (/= "..") <$> (filter(/= ".")) <$> (dirContents p )
+dirPaths p = (map (p ++ ) )<$> (filter(\x -> head x /= '.')) <$> (dirContents p )
+
+  --(filter(\x -> head x /= '.')) <$> (dirContents p )
+--(map (p ++ )) <$> filter (/= "..") <$> (filter(/= ".")) <$> (dirContents p )
 
 dirContents :: FilePath -> IO [FilePath]
 dirContents p = do
