@@ -21,6 +21,10 @@ library
                      , containers
                      , parsec
                      , directory 
+                     , DRBG
+                     , bytestring
+                     , monadcryptorandom
+                     , binary
   default-language:    Haskell2010
 
 executable tokenGen-exe
@@ -32,6 +36,10 @@ executable tokenGen-exe
                      , containers
                      , tokenGen
                      , directory
+                     , DRBG
+                     , bytestring
+                     , monadcryptorandom
+                     , binary
   default-language:    Haskell2010
 
 test-suite tokenGen-test
