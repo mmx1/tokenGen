@@ -21,12 +21,7 @@ readArg = do
 
 
 readDir :: FilePath ->  IO LexHgram
-readDir p = do
-  dirContents <- dirPaths p
-  putStrLn $ show $ dirContents
-  maps <- (M.unionsWith (+) ) <$> (mapM mapFile dirContents)
-  putStrLn $ show maps
-  return maps
+readDir p = (M.unionsWith (+) ) <$> (dirPaths p >>= (mapM mapFile))
 
 dirPaths :: FilePath -> IO [FilePath]
 --listDirectory unavailable, drop .. and .	
