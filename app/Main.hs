@@ -20,12 +20,27 @@ readArg = do
   putStrLn $ show $ M.size maps
 
 
+recReadDir :: FilePath -> IO LexHgram
+recReadDir p = do
+  dfe <- doesDirectoryExist p
+  if dfe
+    then readDir $ p ++ "/"
+    else mapFile p
+
 readDir :: FilePath ->  IO LexHgram
-readDir p = (M.unionsWith (+) ) <$> (dirPaths p >>= (mapM mapFile))
+readDir p = (M.unionsWith (+) ) <$> (dirPaths p >>= (mapM recReadDir))
 
 dirPaths :: FilePath -> IO [FilePath]
---listDirectory unavailable, drop .. and .	
-dirPaths p = (map (p ++ )) <$> filter (/= "..") <$> (filter(/= ".")) <$> (getDirectoryContents p )
+--listDirectory unavailable, drop .. and .  
+dirPaths p = (map (p ++ )) <$> filter (/= "..") <$> (filter(/= ".")) <$> (dirContents p )
+
+dirContents :: FilePath -> IO [FilePath]
+dirContents p = do
+  putStrLn $ "Examining directory: " ++ p
+  contents <- try $ getDirectoryContents p
+  case (contents :: Either IOError [FilePath]) of
+    Left _ -> return []
+    Right contents -> return contents 
 
 mapFile :: FilePath -> IO LexHgram
 mapFile p = do
