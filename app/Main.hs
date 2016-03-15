@@ -29,8 +29,10 @@ dirPaths p = (map (p ++ )) <$> filter (/= "..") <$> (filter(/= ".")) <$> (getDir
 
 mapFile :: FilePath -> IO LexHgram
 mapFile p = do
-  contents <- TIO.readFile p
-  return $ lexMap contents
+  contents <- try $ TIO.readFile p
+  case (contents :: Either IOError T.Text) of
+    Left _ -> return M.empty 
+    Right contents -> return $ lexMap contents
 
 handler :: SomeException -> IO()
 handler = putStrLn . show 

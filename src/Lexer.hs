@@ -29,4 +29,5 @@ cDelimeter:: Parsec T.Text st [Char]
 cDelimeter = many1 $ satisfy isCDelimeter
 
 isCDelimeter:: Char -> Bool
-isCDelimeter c = (isSpace c ) || (isPunctuation c)
+isCDelimeter = not. isAlphaNum
+--isCDelimeter c = (isSpace c ) || (isPunctuation c)
