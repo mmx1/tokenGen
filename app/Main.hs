@@ -20,13 +20,17 @@ main = readArg `catch` handler
 readArg :: IO()
 readArg = do
   (path:_) <- getArgs
+  makePassPhrase path
+
+
+makePassPhrase::FilePath -> IO()
+makePassPhrase path = do
   maps <-  M.filter (> 1) <$> readDir path
   --putStrLn $ show maps
   putStrLn $ "Generated a dictionary of size: " ++ (show $ M.size maps)
   let listArr  = hGramToList maps
   printPassPhrase 128 (M.size maps) listArr
   printPassPhrase 75 (M.size maps) listArr
-  
 
 printPassPhrase :: Int -> Int -> LexList -> IO()
 printPassPhrase n arrSize arr = do

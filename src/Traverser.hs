@@ -41,6 +41,7 @@ dirContents p = do
 mapFile :: FilePath -> IO LexHgram
 mapFile p = do
   contents <- try $ TIO.readFile p
+  --putStrLn $ show contents
   case (contents :: Either IOError T.Text) of
     Left _ -> return M.empty 
     Right contents -> return $  (lexMap contents) --M.filter (> 1)
