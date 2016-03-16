@@ -15,7 +15,6 @@ import Control.Monad
 import Control.Exception
 import qualified Data.ByteString as B
 
-
 recReadDir :: FilePath -> IO LexHgram
 recReadDir p = do
   dfe <- doesDirectoryExist p
@@ -33,7 +32,7 @@ dirPaths p = (map (p ++ ) )<$> (filter(\x -> head x /= '.')) <$> (dirContents p 
 
 dirContents :: FilePath -> IO [FilePath]
 dirContents p = do
-  putStrLn $ "Examining directory: " ++ p
+  --putStrLn $ "Examining directory: " ++ p
   contents <- try $ getDirectoryContents p
   case (contents :: Either IOError [FilePath]) of
     Left _ -> return []
@@ -44,4 +43,4 @@ mapFile p = do
   contents <- try $ TIO.readFile p
   case (contents :: Either IOError T.Text) of
     Left _ -> return M.empty 
-    Right contents -> return $ lexMap contents
+    Right contents -> return $  (lexMap contents) --M.filter (> 1)

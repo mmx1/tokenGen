@@ -15,7 +15,7 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Lexer, Traverser
+  exposed-modules:     Lexer, Traverser, Generator
   build-depends:       base >= 4.7 && < 5
                      , text
                      , containers
@@ -25,6 +25,7 @@ library
                      , bytestring
                      , monadcryptorandom
                      , binary
+                     , array
   default-language:    Haskell2010
 
 executable tokenGen-exe
@@ -40,6 +41,7 @@ executable tokenGen-exe
                      , bytestring
                      , monadcryptorandom
                      , binary
+                     , array
   default-language:    Haskell2010
 
 test-suite tokenGen-test
