@@ -16,9 +16,6 @@ lexMap t = case parse lexer "" t of
   (Left err) -> M.empty
   (Right l)  -> M.fromList . map (\x->(head x, length x)) . group . sort $ l
 
-lexFile :: T.Text -> Either ParseError [T.Text]
-lexFile = parse lexer ""
-
 lexer::Parsec T.Text st [T.Text]
 lexer = optional cDelimeter *> many (lexeme <* cDelimeter) <* eof
 

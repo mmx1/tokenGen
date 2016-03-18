@@ -2,6 +2,7 @@
 module Main where
 
 import Lexer
+import BNCParser
 import Traverser
 import Generator
 import qualified Data.Text as T
@@ -20,6 +21,7 @@ main = readArg `catch` handler
 readArg :: IO()
 readArg = do
   (path:_) <- getArgs
+  readBNC
   makePassPhrase path
 
 
