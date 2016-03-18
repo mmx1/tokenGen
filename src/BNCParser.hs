@@ -1,5 +1,6 @@
 module BNCParser
     ( getBNC
+    , BNCMap
     ) where
 
 import qualified Data.Text as T
@@ -14,14 +15,15 @@ import Data.Tuple
 import Data.Ord
 
 type BNCMap = M.Map T.Text Int -- maps words to frequency /100M in British National Corpus
-
+-- same underlying type as LexHgram, but named separately to discourage merging. Since the
+-- frequencies are from differen corpuses, merging would muddy the data
 
 getBNC :: IO BNCMap
 getBNC = do
   contents <- TIO.readFile "alls.num"
   let l = T.lines contents
   --putStrLn $ show l
-  let m = M.fromList $ (take (2^15)) . reverse $ sortBy (comparing fst) (map parseLineW l)
+  let m = M.fromList . (take (2^15)) . reverse $ sortBy (comparing snd) (map parseLineW l)
   --putStrLn $ show m
   return m
 
@@ -30,10 +32,10 @@ bncMap t = case parse parseBNC "" t of
   (Left err) -> M.empty
   (Right l)  -> M.fromList l
 
-parseLineW::T.Text -> (Int, T.Text)
+parseLineW::T.Text -> (T.Text, Int)
 parseLineW t = case parse parseLine "" t of
-  (Left err) -> (0, T.empty) -- zero occurence will fall off the end of the map
-  (Right l)  -> l
+  (Left err) -> (T.empty, 0) -- zero occurence will fall off the end of the map
+  (Right l)  -> swap l
 
 parseBNC:: Parsec T.Text st [(T.Text, Int)]
 parseBNC = map swap  <$> many (parseLine <*  optional spaces)--`sepBy` space--many (parseLine <* skipMany1 spaces)

@@ -26,6 +26,7 @@ library
                      , monadcryptorandom
                      , binary
                      , array
+                     , optparse-applicative
   default-language:    Haskell2010
 
 executable tokenGen-exe
@@ -42,6 +43,7 @@ executable tokenGen-exe
                      , monadcryptorandom
                      , binary
                      , array
+                     , optparse-applicative
   default-language:    Haskell2010
 
 test-suite tokenGen-test
