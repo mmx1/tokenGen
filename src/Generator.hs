@@ -11,14 +11,13 @@ import Control.Monad.CryptoRandom
 import System.Exit
 import Data.Int
 import Data.Array 
-import Data.Set as S
 import qualified Data.Text as T
 import qualified Data.Map.Lazy as M
 
 type LexList = Array Int T.Text
 
 hGramToList :: LexHgram -> LexList
-hGramToList m = listArray (0, M.size m) ( S.elems . M.keysSet $ m)
+hGramToList m = listArray (0, M.size m) ( M.keys $ m)
 
 genPassPhrase :: Int ->  Int -> LexList -> IO [T.Text]
 genPassPhrase n size array = sequence $ loop [] n size array

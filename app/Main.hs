@@ -49,6 +49,15 @@ compareDict b l = do
   let intersect = M.intersection smallB l
   let percent = 100 * ( fromIntegral $ M.size intersect) / (fromIntegral lSize)  
   printf "Your dictionary overlaps %.2f %% with the most common English Words \n" (percent :: Float)
+  printf "With an average word length of  %.1f n" ((average l) :: Float)
+
+average :: LexHgram -> Float
+average l = (fromIntegral total) / (fromIntegral num)
+  where total = foldl (addL) 0 (M.keys $l)
+        num = M.size l
+
+addL :: Int -> T.Text -> Int 
+addL i t = i + (T.length t)
 
 fillDict :: Bool -> LexHgram -> BNCMap -> LexHgram
 fillDict False l _ = l
@@ -93,6 +102,7 @@ getDict path = do
   --putStrLn $ "Read " ++ (show $ M.size dict) ++ " symbols"
   if (M.size dict) > 2^15
   then do
+    putStrLn $ "Generated " ++ (show $ M.size dict) ++ "entries"
     putStrLn "Truncating to 2^15 most common"
     --return dict
     return $ M.fromList . (take (2^15)) . reverse $ sortBy (comparing snd) $ M.toList dict
